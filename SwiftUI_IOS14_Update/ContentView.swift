@@ -226,33 +226,48 @@ struct ExpandableList_Demo: View {
 }
 
 struct MatchedGeometryEffect_Demo: View {
-    @State private var isFlipped = false
+    @State private var isZoomed = false
     @Namespace private var animation
+    
+    var frame: CGFloat{
+        isZoomed ? 300 : 44
+    }
+    
     var body: some View{
         VStack{
-            if isFlipped{
-                Circle()
-                    .fill(Color.green)
-                    .matchedGeometryEffect(id: "round", in: animation)
-                    .frame(width: 100, height: 100)
-                Rectangle()
-                    .fill(Color.red)
-                    .frame(width: 100, height: 100)
-                    .matchedGeometryEffect(id: "rect", in: animation)
-            }else{
-                Rectangle()
-                    .fill(Color.red)
-                    .frame(width: 100, height: 100)
-                    .matchedGeometryEffect(id: "rect", in: animation)
-                Circle()
-                    .fill(Color.green)
-                    .matchedGeometryEffect(id: "round", in: animation)
-                    .frame(width: 100, height: 100)
+            Spacer()
+            VStack {
+                HStack{
+                    RoundedRectangle(cornerRadius: 10.0)
+                        .fill(Color.green)
+                        .frame(width: frame, height: frame)
+                        .padding(.top, isZoomed ? 20 : 0)
+                    
+                    if isZoomed == false{
+                        Text("Sushrut Shastri - 1992")
+                            .font(.headline)
+                            .matchedGeometryEffect(id: "name", in: animation)
+                    }
+                }
+                
+                if isZoomed{
+                    Text("Sushrut Shastri - 1992")
+                        .font(.headline)
+                        .matchedGeometryEffect(id: "name", in: animation)
+                        .padding(.bottom, 60)
+                    
+                    Spacer()
+                }
+            }.onTapGesture {
+                withAnimation(.spring()){
+                    self.isZoomed.toggle()
+                }
             }
-        }.onTapGesture {
-            withAnimation{
-                self.isFlipped.toggle()
-            }
+            .padding()
+            .frame(maxWidth : .infinity)
+            .frame(height: isZoomed ? 400 : 60)
+            .background(Color(white: 0.9))
+            Spacer()
         }
     }
 }
