@@ -11,7 +11,7 @@ import AVKit
 
 struct ContentView: View {
     var body: some View {
-        MatchedGeometryEffect_Demo()
+        ScrollViewReader_Demo()
     }
 }
 
@@ -225,6 +225,7 @@ struct ExpandableList_Demo: View {
     }
 }
 
+///MatchedGreometryEffect to achieve sleek animations
 struct MatchedGeometryEffect_Demo: View {
     @State private var isZoomed = false
     @Namespace private var animation
@@ -268,6 +269,28 @@ struct MatchedGeometryEffect_Demo: View {
             .frame(height: isZoomed ? 400 : 60)
             .background(Color(white: 0.9))
             Spacer()
+        }
+    }
+}
+///ScrollViewReader to scroll to particular item
+struct ScrollViewReader_Demo : View {
+    let colors: [Color] = [.red, .green, .blue]
+    
+    var body: some View{
+        ScrollView{
+            ScrollViewReader{ value in
+                Button("Jump to 6th"){
+                    withAnimation{
+                        value.scrollTo(6, anchor: .center)
+                    }
+                }
+                ForEach(0..<10){ i in
+                    Text("\(i)th Element")
+                        .frame(width: 200, height: 200)
+                        .background(colors[i % colors.count])
+                        .id(i)
+                }
+            }
         }
     }
 }
