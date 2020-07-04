@@ -8,20 +8,23 @@
 import SwiftUI
 import MapKit
 import AVKit
+import StoreKit
 
+//MARK: - ContentView
 struct ContentView: View {
     var body: some View {
-        ScrollViewReader_Demo()
+        AppClips_Demo()
     }
 }
 
+//MARK: - ContentView Preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
 }
 
-///TextEditor
+//MARK: - TextEditor
 struct TextEditor_Demo: View {
     @State private var text = "Enter something"
     var body: some View {
@@ -40,7 +43,7 @@ struct TextEditor_Demo: View {
     }
 }
 
-///Grid Demo
+//MARK: - Grid Demo
 struct Grid_Demo: View {
     let data = (1...1000).map{ "Cell \($0)" }
     let column = [
@@ -65,7 +68,7 @@ struct Grid_Demo: View {
     }
 }
 
-///MapView
+//MARK: - MapView
 struct MapView_Demo: View {
     @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 23.018137, longitude: 72.589965), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
     
@@ -75,13 +78,15 @@ struct MapView_Demo: View {
     }
 }
 
-///ColorPicker
+//MARK: - ColorPicker
 struct ColorPicker_Demo: View {
     @State private var bgColor = Color.white
     var body: some View{
         ColorPicker("Select Background Color", selection: $bgColor)
     }
 }
+
+//MARK: - Video Player
 struct VideoPlayer_Demo : View {
     var body: some View{
         VideoPlayer(player: AVPlayer(url: URL(string: "https://bit.ly/swswift")!)) {
@@ -91,6 +96,7 @@ struct VideoPlayer_Demo : View {
     }
 }
 
+//MARK: - Label
 struct Label_Demo: View {
     var body: some View{
         VStack {
@@ -116,6 +122,7 @@ struct Label_Demo: View {
     }
 }
 
+//MARK: - Link (Opens given URL in Safari)
 struct Link_Demo: View {
     var body: some View{
         Link(destination: URL(string: "https://apple.com")!){
@@ -138,6 +145,7 @@ struct Link_Demo: View {
     }
 }
 
+//MARK: - Datepicker IOS 14
 struct DatePicker_Demo: View {
     @State private var date = Date()
     var body: some View{
@@ -152,6 +160,7 @@ struct DatePicker_Demo: View {
     }
 }
 
+//MARK: - Disclosure Group (Collapsable view)
 struct DisclosureGroup_Demo: View {
     @State private var isOpened = false
     var body: some View{
@@ -172,6 +181,7 @@ struct DisclosureGroup_Demo: View {
     }
 }
 
+//MARK: - Toolbar Items
 struct ToolBarItem_Demo: View {
     var body: some View{
         NavigationView{
@@ -195,8 +205,7 @@ struct ToolBarItem_Demo: View {
     }
 }
 
-///List with expandable rows
-
+//MARK: - List with expandable rows
 struct Bookmark : Identifiable {
     let id = UUID()
     let name: String
@@ -225,7 +234,7 @@ struct ExpandableList_Demo: View {
     }
 }
 
-///MatchedGreometryEffect to achieve sleek animations
+//MARK: - MatchedGreometryEffect to achieve sleek animations
 struct MatchedGeometryEffect_Demo: View {
     @State private var isZoomed = false
     @Namespace private var animation
@@ -272,7 +281,8 @@ struct MatchedGeometryEffect_Demo: View {
         }
     }
 }
-///ScrollViewReader to scroll to particular item
+
+//MARK: - ScrollViewReader to scroll to particular item
 struct ScrollViewReader_Demo : View {
     let colors: [Color] = [.red, .green, .blue]
     
@@ -294,3 +304,101 @@ struct ScrollViewReader_Demo : View {
         }
     }
 }
+
+//MARK: - Full Screen Cover (Present view which covers up whole screen)
+struct FullScreenCover_Demo: View {
+    @State private var isPresented = false
+    
+    var body: some View{
+        Button("Present"){
+            self.isPresented.toggle()
+        }
+        .fullScreenCover(isPresented: $isPresented, content: DateFormating_Demo.init)
+    }
+}
+
+//MARK: - Date Formatting
+struct DateFormating_Demo : View {
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View{
+        VStack(alignment: .leading, spacing: 10){
+            Spacer()
+            
+            HStack{
+                Spacer()
+                Text("Date")
+                    .fontWeight(.bold)
+                Text(Date().addingTimeInterval(600), style: .date)
+                    .frame(width: 200)
+                Spacer()
+            }
+            
+            HStack{
+                Spacer()
+                Text("Time")
+                    .fontWeight(.bold)
+                Text(Date().addingTimeInterval(600), style: .time)
+                    .frame(width: 200)
+                Spacer()
+            }
+            
+            HStack{
+                Spacer()
+                Text("Relative")
+                    .fontWeight(.bold)
+                Text(Date().addingTimeInterval(600), style: .relative)
+                    .frame(width: 200)
+                Spacer()
+            }
+            
+            HStack{
+                Spacer()
+                Text("Timer")
+                    .fontWeight(.bold)
+                Text(Date().addingTimeInterval(600), style: .timer)
+                    .frame(width: 200)
+                Spacer()
+            }
+            Button("Dismiss"){
+                presentationMode.wrappedValue.dismiss()
+            }
+            
+            Spacer()
+        }
+        .background(Color.green.opacity(0.4))
+        .edgesIgnoringSafeArea(.all)
+    }
+}
+
+//MARK: - App Clips & Colored SFSymbols
+struct AppClips_Demo: View {
+    @State private var showRecommended = false
+    @ScaledMetric var imageSize: CGFloat = 100
+    var body: some View{
+        VStack {
+            ///Scaled Image
+            Image(systemName: "cloud.sun.bolt.fill")
+                .resizable()
+                .frame(width: imageSize, height: imageSize)
+            
+            ///Colored Image
+            Image(systemName: "cloud.sun.bolt.fill")
+                .renderingMode(.original)
+                .font(.largeTitle)
+                .padding()
+                .background(Color.black)
+                .clipShape(Circle())
+            
+            ///Show App Clips
+            Button("Show Recomended App"){
+                self.showRecommended.toggle()
+            }
+            .appStoreOverlay(isPresented: $showRecommended){
+                SKOverlay.AppConfiguration(appIdentifier: "1440611372", position: .bottom)
+        }
+        }
+    }
+}
+
+
