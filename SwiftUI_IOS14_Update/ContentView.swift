@@ -11,7 +11,7 @@ import AVKit
 
 struct ContentView: View {
     var body: some View {
-        ExpandableList_Demo()
+        MatchedGeometryEffect_Demo()
     }
 }
 
@@ -225,3 +225,34 @@ struct ExpandableList_Demo: View {
     }
 }
 
+struct MatchedGeometryEffect_Demo: View {
+    @State private var isFlipped = false
+    @Namespace private var animation
+    var body: some View{
+        VStack{
+            if isFlipped{
+                Circle()
+                    .fill(Color.green)
+                    .matchedGeometryEffect(id: "round", in: animation)
+                    .frame(width: 100, height: 100)
+                Rectangle()
+                    .fill(Color.red)
+                    .frame(width: 100, height: 100)
+                    .matchedGeometryEffect(id: "rect", in: animation)
+            }else{
+                Rectangle()
+                    .fill(Color.red)
+                    .frame(width: 100, height: 100)
+                    .matchedGeometryEffect(id: "rect", in: animation)
+                Circle()
+                    .fill(Color.green)
+                    .matchedGeometryEffect(id: "round", in: animation)
+                    .frame(width: 100, height: 100)
+            }
+        }.onTapGesture {
+            withAnimation{
+                self.isFlipped.toggle()
+            }
+        }
+    }
+}
